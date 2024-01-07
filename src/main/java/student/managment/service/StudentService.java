@@ -26,8 +26,12 @@ public class StudentService {
 		return studentRepository.save(student);
 	}
 
-	public void delteStudent(Long id) {
-		studentRepository.deleteById(id);
+	public boolean delteStudent(Long id) {
+		if(studentRepository.existsById(id)) {
+			studentRepository.deleteById(id);
+			return true;
+		}
+		return false;
 		
 	}
 	
