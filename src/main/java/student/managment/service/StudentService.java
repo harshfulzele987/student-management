@@ -1,5 +1,6 @@
 package student.managment.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,13 @@ public class StudentService {
 		return studentRepository.save(student);
 	}
 	
-	public List<Student> getStudent() {
-		return (List<Student>) studentRepository.findAll();
+	public List<Student> getStudent(Long id) {
+		List<Student> response = new ArrayList<>();
+		if(id == null) {
+			return response = (List<Student>) studentRepository.findAll();			
+		}
+		 response.add(studentRepository.findById(id).get());
+		 return response;
 	}
 
 	public Student updateStudent(Student student) {
