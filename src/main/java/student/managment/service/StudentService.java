@@ -17,37 +17,46 @@ public class StudentService {
 	private StudentRepository studentRepository;
 	
 	public Student createStudent(Student student) throws StudentNotCreatedException {
+		Student result = null;
 		try {
 			if(student == null) {
 				throw new StudentNotCreatedException("Student object is empty");
 			}
-			return studentRepository.save(student);
+			result = studentRepository.save(student);
 		}catch(Exception e) {
-			throw new StudentNotCreatedException("Student not created");
+			e.printStackTrace();
 		}
+		return result;
 	}
 	
 	public List<Student> getStudent(Long id) throws StudentNotFoundException {
 		List<Student> response = new ArrayList<>();
 		try {
 			if(id == null) {
-				return response = (List<Student>) studentRepository.findAll();			
+					response = (List<Student>) studentRepository.findAll();			
 			}
 			 response.add(studentRepository.findById(id).get());
-			 
+			 if(response.isEmpty()) {
+				 throw new StudentNotFoundException("Student with id not found");				 
+			 }
+
 		}catch(Exception e) {
-			throw new StudentNotFoundException("Student with id not found");
+			e.printStackTrace();
 		}
 		return response;
+
 	}
 
 	public Student updateStudent(Student student) throws StudentNotUpdateException {
+		Student result = null;
 		try {
-			return studentRepository.save(student);
-			
+			if(student == null) 
+				throw new StudentNotUpdateException("student not updated");
+			result=	studentRepository.save(student);
 		}catch(Exception e) {
-			throw new StudentNotUpdateException("studetn not updated");
+			e.printStackTrace();
 		}
+		return result;
 	}
 
 	public boolean delteStudent(Long id) throws StudentNotFoundException {
@@ -56,10 +65,10 @@ public class StudentService {
 			studentRepository.deleteById(id);
 			return true;
 		}
+		return false;
 		}catch(Exception e) {
 			throw new StudentNotFoundException("Student id not found");
 		}
-		return false;
 		
 	}
 	
