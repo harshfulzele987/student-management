@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import student.managment.entity.Student;
+import student.managment.service.StudentNotCreatedException;
+import student.managment.service.StudentNotFoundException;
+import student.managment.service.StudentNotUpdateException;
 import student.managment.service.StudentService;
 
 @RestController
@@ -26,22 +29,22 @@ public class StudentController {
 	private StudentService studentService;
 	
 	@PostMapping("/create")
-	public Student createStudent( @Valid @RequestBody Student student) {
+	public Student createStudent( @Valid @RequestBody Student student) throws StudentNotCreatedException {
 		return studentService.createStudent(student);
 	}
 	
 	@GetMapping("/")
-	public List<Student> getStudent(@RequestParam(value = "id" ,required = false) Long id){
+	public List<Student> getStudent(@RequestParam(value = "id" ,required = false) Long id) throws StudentNotFoundException{
 		return studentService.getStudent(id);
 	}
 	
 	@PutMapping("/update")
-	public  Student updateStudent(@RequestBody Student student){
+	public  Student updateStudent(@RequestBody Student student) throws StudentNotUpdateException{
 			return studentService.updateStudent(student);
 	}
 	
 	@DeleteMapping("/{id}")
-	public boolean deleteStudent(@PathVariable Long id) {
+	public boolean deleteStudent(@PathVariable Long id) throws StudentNotFoundException {
 		return studentService.delteStudent(id);
 	}
 	
