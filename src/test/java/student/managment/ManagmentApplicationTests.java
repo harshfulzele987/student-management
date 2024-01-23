@@ -3,11 +3,11 @@ package student.managment;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class ManagmentApplicationTests {
+import student.managment.controller.StudentControllerTest;
+import student.managment.service.StudentServiceTest;
 
-	@Test
-	void contextLoads() {
-	}
+@SpringBootTest(classes = {StudentControllerTest.class,
+		StudentServiceTest.class})
+class ManagmentApplicationTests {
 
 }

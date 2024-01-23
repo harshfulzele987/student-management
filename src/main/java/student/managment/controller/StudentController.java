@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
+import student.managment.entity.ClassRange;
 import student.managment.entity.Student;
 import student.managment.service.StudentNotCreatedException;
 import student.managment.service.StudentNotFoundException;
@@ -25,14 +26,14 @@ import student.managment.service.StudentNotUpdateException;
 import student.managment.service.StudentService;
 
 @RestController
-@Validated
+//@Validated
 public class StudentController {
 	
 	@Autowired
 	private StudentService studentService;
 	
 	@PostMapping("/create")
-	public ResponseEntity<?> createStudent( @RequestBody Student student) throws StudentNotCreatedException {
+	public ResponseEntity<?> createStudent(@RequestBody Student student) throws StudentNotCreatedException {
 		Student result =  studentService.createStudent(student);
 		if(result!=null) return new ResponseEntity<Student>(result , HttpStatus.CREATED);
 		return new ResponseEntity<>("Not created" , HttpStatus.BAD_REQUEST);

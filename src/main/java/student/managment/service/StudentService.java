@@ -18,6 +18,7 @@ public class StudentService {
 	
 	public Student createStudent(Student student) throws StudentNotCreatedException {
 		Student result = null;
+		System.out.println("here--->");
 		try {
 			if(student == null) {
 				throw new StudentNotCreatedException("Student object is empty");
@@ -54,7 +55,7 @@ public class StudentService {
 				throw new StudentNotUpdateException("student not updated");
 			result=	studentRepository.save(student);
 		}catch(Exception e) {
-			e.printStackTrace();
+			throw new StudentNotUpdateException("Error Occured");
 		}
 		return result;
 	}
