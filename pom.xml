@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>student</groupId>
 	<artifactId>managment</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>student</version>
 	<name>managment</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -63,6 +63,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>student-managment</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -78,5 +79,6 @@
 			</plugin>
 		</plugins>
 	</build>
+	
 
 </project>
