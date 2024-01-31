@@ -11,7 +11,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -62,13 +64,14 @@ public class StudentControllerTest {
 	}
 	
 	@Test
+	@DisplayName("Test Case for Get Student Details")
 	public void getStudentTest() throws UnsupportedEncodingException, Exception {
 		List<Student> result  = new ArrayList<>();
 		result.add(this.dummyData());
 		Mockito.when(studentService.getStudent(1L)).thenReturn(result);
 		
 		mockMvc.perform(MockMvcRequestBuilders
-				.get("/?id=1")
+				.get("/student/?id=1")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$" , hasSize(1)))
@@ -77,7 +80,7 @@ public class StudentControllerTest {
 		Mockito.when(studentService.getStudent(null)).thenReturn(result);
 		
 		mockMvc.perform(MockMvcRequestBuilders
-				.get("/")
+				.get("/student")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$" , hasSize(1)))
@@ -87,13 +90,14 @@ public class StudentControllerTest {
 		Mockito.when(studentService.getStudent(null)).thenReturn(dummyResult);
 		
 		mockMvc.perform(MockMvcRequestBuilders
-				.get("/")
+				.get("/student")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound())
 				.andReturn().getResponse().getContentAsString();
 	}
 	
 	@Test
+	@DisplayName("Test Case for Create Student")
 	public void CreateStudentTest() throws UnsupportedEncodingException, Exception {
 		
 		Student student1 = new Student();
@@ -101,30 +105,38 @@ public class StudentControllerTest {
 		student1.setStudentClass(ClassRange.Class_1);
 		student1.setAddress("mumbai");
 		
+		Student student2 = new Student();
+		student2 = null;
+		
 		Mockito.when(studentService.createStudent(Mockito.any())).thenReturn(this.dummyData());
 		
 		String content = objectIdWriter.writeValueAsString(student1);
+		String content_empty = objectIdWriter.writeValueAsString(student2);
 		
-		MockHttpServletRequestBuilder mockRequestBuilder = MockMvcRequestBuilders.post("/create")
+		MockHttpServletRequestBuilder mockRequestBuilder = MockMvcRequestBuilders.post("/student")
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON)
 				.content(content);
+
+				mockMvc.perform(mockRequestBuilder)
+						.andExpect(status().isCreated())
+						.andExpect(jsonPath("$.id",is(1)))
+						.andReturn().getResponse().getContentAsString();
 		
-		mockMvc.perform(mockRequestBuilder)
-				.andExpect(status().isCreated())
-				.andExpect(jsonPath("$.id",is(1)))
-				.andReturn().getResponse().getContentAsString();
-		
-		
-		
-		mockMvc.perform(MockMvcRequestBuilders
-				.post("/create")
-				.contentType(MediaType.APPLICATION_JSON))
+				
+		MockHttpServletRequestBuilder mockRequestBuilder_empty = MockMvcRequestBuilders.post("/student")
+						.contentType(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON)
+						.content(content_empty);
+				
+				mockMvc.perform(mockRequestBuilder_empty)
 				.andExpect(status().isBadRequest())
 				.andReturn().getResponse().getContentAsString();
+				
 	}
 	
 	@Test
+	@DisplayName("Test Case for Update Student")
 	public void updateStudentTest() throws UnsupportedEncodingException, Exception {
 		
 		
@@ -132,7 +144,7 @@ public class StudentControllerTest {
 		
 		String content = objectIdWriter.writeValueAsString(this.dummyData());
 		
-		MockHttpServletRequestBuilder mockRequestBuilder = MockMvcRequestBuilders.put("/update")
+		MockHttpServletRequestBuilder mockRequestBuilder = MockMvcRequestBuilders.put("/student")
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON)
 				.content(content);
@@ -145,13 +157,14 @@ public class StudentControllerTest {
 //		Mockito.when(studentService.updateStudent(null)).thenReturn(null);
 		
 		mockMvc.perform(MockMvcRequestBuilders
-				.put("/update")
+				.put("/student")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isBadRequest())
 				.andReturn().getResponse().getContentAsString();
 	}
 	
 	@Test
+	@DisplayName("Test Case For delete Student")
 	public void deleteStudentTest() throws UnsupportedEncodingException, Exception {
 		
 		
@@ -159,7 +172,7 @@ public class StudentControllerTest {
 		
 		
 		  mockMvc.perform(MockMvcRequestBuilders
-		            .delete("/1")
+		            .delete("/student/1")
 		            .contentType(MediaType.APPLICATION_JSON))
 		            .andExpect(status().isOk());
 		  
@@ -168,9 +181,9 @@ public class StudentControllerTest {
 			
 			
 		  mockMvc.perform(MockMvcRequestBuilders
-		            .delete("/1")
+		            .delete("/student/1")
 		            .contentType(MediaType.APPLICATION_JSON))
-		            .andExpect(status().isNoContent());
+		            .andExpect(status().isBadRequest());
 		  
 	}
 	
