@@ -18,12 +18,11 @@ public class StudentService {
 	
 	public Student createStudent(Student student) throws StudentNotCreatedException {
 		Student result = null;
-		System.out.println("here--->");
 		try {
-			if(student == null) {
+			result = studentRepository.save(student);
+			if(result == null) {
 				throw new StudentNotCreatedException("Student object is empty");
 			}
-			result = studentRepository.save(student);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -34,15 +33,11 @@ public class StudentService {
 		List<Student> response = new ArrayList<>();
 		try {
 			if(id == null) {
-					response = (List<Student>) studentRepository.findAll();			
+					return response = (List<Student>) studentRepository.findAll();			
 			}
-			 response.add(studentRepository.findById(id).get());
-			 if(response.isEmpty()) {
-				 throw new StudentNotFoundException("Student with id not found");				 
-			 }
-
+			  response.add(studentRepository.findById(id).get());
 		}catch(Exception e) {
-			e.printStackTrace();
+			 throw new StudentNotFoundException("Student with id not found");
 		}
 		return response;
 
@@ -51,11 +46,9 @@ public class StudentService {
 	public Student updateStudent(Student student) throws StudentNotUpdateException {
 		Student result = null;
 		try {
-			if(student == null) 
-				throw new StudentNotUpdateException("student not updated");
 			result=	studentRepository.save(student);
 		}catch(Exception e) {
-			throw new StudentNotUpdateException("Error Occured");
+			throw new StudentNotUpdateException("student not updated");
 		}
 		return result;
 	}

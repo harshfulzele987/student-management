@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,6 +42,7 @@ public class StudentServiceTest {
 
 	
 	@Test
+	@DisplayName("All Test Cases for Get Student Service")
 	public void getStudentTest() throws StudentNotFoundException {
 		List<Student> result = new ArrayList<>();
 		result.add(this.dummyData());
@@ -56,9 +58,17 @@ public class StudentServiceTest {
 		Mockito.when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
 		result = studentService.getStudent(1l);
 		assertThat(result).isNotNull();
+		
+		Long studentId = 1l;
+		when(studentRepository.findById(studentId)).thenThrow(new RuntimeException("error"));
+		Throwable exception =Assertions.assertThrows(StudentNotFoundException.class, ()->{
+			studentService.getStudent(studentId);
+		});
+		Assertions.assertEquals("Student with id not found", exception.getMessage());
 	}
 	
 	@Test
+	@DisplayName("All test cases for Create Student service")
 	public void createStudentTest() throws StudentNotFoundException, StudentNotCreatedException {
 		Student student = new Student();
 		student.setName("mohit");
@@ -68,9 +78,16 @@ public class StudentServiceTest {
 		Mockito.when(studentRepository.save(student)).thenReturn(this.dummyData());
 		Student result = studentService.createStudent(student);
 		assertThat(result).isNotNull();
+		
+		Student Empty_Student = new Student();
+		Student res = studentService.createStudent(Empty_Student);
+		assertThat(res).isNull();
+		
+		
 	}
 	
 	@Test
+	@DisplayName("All Test Case for Update Student Service")
 	public void updateStudentTest() throws StudentNotFoundException, StudentNotCreatedException, StudentNotUpdateException {
 		Student student = new Student();
 		student.setName("mohit");
@@ -81,12 +98,13 @@ public class StudentServiceTest {
 		Student result = studentService.updateStudent(student);
 		assertThat(result).isNotNull();
 		
-		Mockito.when(studentRepository.save(student)).thenThrow(new IllegalArgumentException("error"));
-		Throwable exception = Assertions.assertThrows(StudentNotUpdateException.class, () -> studentService.updateStudent(student));
-		Assertions.assertEquals("Error Occured", exception.getMessage());
+		Mockito.when(studentRepository.save(student)).thenThrow(new IllegalArgumentException("error here"));
+		Throwable exception1 = Assertions.assertThrows(StudentNotUpdateException.class, () -> studentService.updateStudent(student));
+		Assertions.assertEquals("student not updated", exception1.getMessage());
 	}
 	
 	@Test
+	@DisplayName("All Test Cases for delete Student Service layer")
 	public void deleteStudentTest() throws StudentNotFoundException, StudentNotCreatedException {
 		Long id = 1l;
 		
