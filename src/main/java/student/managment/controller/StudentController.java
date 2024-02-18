@@ -34,6 +34,11 @@ public class StudentController {
 	@Autowired
 	private StudentService studentService;
 	
+	@GetMapping("/test")
+	private String dummyControllerMethod() {
+		return "Ruuning application";
+	}
+	
 	@PostMapping
 	public ResponseEntity<?> createStudent(@RequestBody Student student) throws StudentNotCreatedException {
 		Student result =  studentService.createStudent(student);
